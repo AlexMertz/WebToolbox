@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <!-- Required meta tags always come first -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <title>Web-Toolbox Durable</title>
+
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/fullcalendar.min.css">
+  <link rel="stylesheet" href="css/font-awesome.min.css">
+
+
+  <style>
+    nav.navbar {
+      height: 50px;
+    }
+    .action {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: box-shadow 0.2s;
+    }
+    .action:hover {
+      -webkit-box-shadow: inset 0px 0px 29px -6px rgba(0,0,0,0.75);
+      -moz-box-shadow: inset 0px 0px 29px -6px rgba(0,0,0,0.75);
+      box-shadow: inset 0px 0px 29px -6px rgba(0,0,0,0.75);
+      cursor: pointer;
+    }
+    .hidden {
+      display: none;
+    }
+    .verticalSplit {
+      height: calc(100vh - 50px);
+    }
+    .action {
+      height: 50%;
+    }
+    .rechercher {
+    }
+    .agenda {
+    }
+    #calendarDiv {
+      padding: 2rem 0;
+      height: 100%;
+      width: 100%;
+    }
+    .proposer {
+    }
+    .fc-toolbar h2 {
+      text-transform: capitalize;
+    }
+    .fc-state-highlight {
+      background: #0093164d !important;
+    }
+    nav.bg-faded {
+      background-color: #009316b3;
+    }
+    .card {
+      border: 1px solid rgb(76, 179, 91);
+    }
+    .navbar-light .navbar-nav .active > .nav-link {
+      color: white;
+    }
+  </style>
+</head>
+<body class="container-fluid">
+  <div class="row">
+    <nav class="navbar navbar-light bg-faded">
+      <ul class="nav navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="#"><i class="fa fa-th" aria-hidden="true"></i> Web-Toolbox Durable<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#"><i class="fa fa-car" aria-hidden="true"></i> Covoit BF-PG</a>
+        </li>
+      </ul>
+    </nav>
+    <div class="col-md-12 col-lg-6 agenda verticalSplit">
+      <div id='calendarDiv'><div id='calendar'></div></div>
+    </div>
+    <div class="col-md-12 col-lg-6 container-fluid verticalSplit">
+      <div class="row rechercher action" id=rech-act>
+        <div class="placeholder">
+          <div class="card">
+            <div class="card-block text-nowrap text-uppercase">
+              <i class="fa fa-search" aria-hidden="true"></i> Rechercher
+            </div>
+          </div>
+        </div>
+        <div class="hidden">
+          <div class="placeholder">
+            <button type="button" class="btn btn-primary btn-lg btn-block"><i class="fa fa-magic" aria-hidden="true"></i> Rechercher automatiquement</button>
+            <button type="button" class="btn btn-outline-primary btn-lg btn-block manual">Rechercher manuellement</button>
+          </div>
+          <div class="hidden">
+           <fieldset class="form-group">
+           <legend>Rechercher</legend>
+           <div class="form-group">
+              <select class="form-control">
+                <option>BF -> PG</option>
+                <option>PG -> BF</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <select class="form-control">
+                <option>Lundi</option>
+                <option>Mardi</option>
+                <option>Mercredi</option>
+                <option>Jeudi</option>
+                <option>Vendredi</option>
+                <option>Samedi</option>
+              </select>
+              <select class="form-control">
+                <option>8h</option>
+                <option>10h15</option>
+                <option>12h15</option>
+                <option>14h15</option>
+                <option>16h30</option>
+                <option>18h30</option>
+              </select>
+            </div>
+            <div class="form-group row">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked="checked">
+                  Toutes les semaines
+                </label>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+                  Semaine A
+                </label>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+                  Semaine B
+                </label>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="radio" id="togglePonctual" name="exampleRadios"  value="ponctual">
+                  Une seule fois
+                </label>
+              </div>
+              <div class="hidden ponctual">
+                <label for="example-datetime-local-input" class="col-xs-4 col-form-label">Seulement le</label>
+                <div class="col-xs-8">
+                  <input class="form-control" type="datetime-local" value="2011-08-19T13:45:00" id="example-datetime-local-input">
+                </div>
+              </div>
+            </div>
+             <button type="submit" class="btn btn-primary">Rechercher</button>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+    <div class="row proposer action" id=prop-act>
+      <div class="placeholder">
+        <div class="card">
+          <div class="card-block text-nowrap text-uppercase">
+            <i class="fa fa-calendar-plus-o" aria-hidden="true"></i> Proposer
+          </div>
+        </div>
+      </div>
+      <div class="placeholder hidden">
+        <div class="placeholder">
+          <button type="button" class="btn btn-primary btn-lg btn-block"><i class="fa fa-magic" aria-hidden="true"></i> Proposer automatiquement</button>
+          <button type="button" class="btn btn-outline-primary btn-lg btn-block manual">Proposer manuellement</button>
+        </div>
+        <div class="hidden">
+          <fieldset class="form-group">
+           <legend>Proposer</legend>
+           <div class="form-group">
+              <select class="form-control">
+                <option>BF -> PG</option>
+                <option>PG -> BF</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <select class="form-control">
+                <option>Lundi</option>
+                <option>Mardi</option>
+                <option>Mercredi</option>
+                <option>Jeudi</option>
+                <option>Vendredi</option>
+                <option>Samedi</option>
+              </select>
+              <select class="form-control">
+                <option>8h</option>
+                <option>10h15</option>
+                <option>12h15</option>
+                <option>14h15</option>
+                <option>16h30</option>
+                <option>18h30</option>
+              </select>
+            </div>
+            <div class="form-group row">
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked="checked">
+                  Toutes les semaines
+                </label>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+                  Semaine A
+                </label>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1">
+                  Semaine B
+                </label>
+              </div>
+              <div class="form-check">
+                <label class="form-check-label">
+                  <input class="form-check-input" type="radio" id="togglePonctual" name="exampleRadios"  value="ponctual">
+                  Une seule fois
+                </label>
+              </div>
+              <div class="hidden ponctual">
+                <label for="example-datetime-local-input" class="col-xs-4 col-form-label">Seulement le</label>
+                <div class="col-xs-8">
+                  <input class="form-control" type="datetime-local" value="2011-08-19T13:45:00" id="example-datetime-local-input">
+                </div>
+              </div>
+            </div>
+             <button type="submit" class="btn btn-primary">Proposer</button>
+          </fieldset>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- jQuery first, then Tether, then Bootstrap JS. -->
+<script src="js/jquery-3.1.1.min.js"></script>
+<script src="js/moment-with-locales.min.js"></script>
+<script src="js/bootstrap.min.js"></script>
+<script src="js/fullcalendar.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+
+    // page is now ready, initialize the calendar...
+
+    $('#calendar').fullCalendar({
+      hiddenDays: [ 0 ],
+      locale: "fr",
+      buttonText: { today: "Aujourd'hui" },
+      defaultView: "agendaWeek",
+      height: "parent"
+    })
+
+  });
+
+/*  $(".action").on("click", function () {
+    $(this).find("> .placeholder").hide();
+    $(this).find("> .hidden").show();
+  })*/
+
+
+ $("#rech-act").on("click", function () {
+    $(this).find("> .placeholder").hide();
+    $(this).find("> .hidden").show();
+    $("#prop-act").find("> .placeholder").show();
+    $("#prop-act").find("> .hidden").hide();
+    $("#prop-act").child().find("> .placeholder").hide();
+    $("#prop-act").child().find("> .hidden").hide();
+  })
+
+ $("#prop-act").on("click", function () {
+    $(this).find("> .placeholder").hide();
+    $(this).find("> .hidden").show();
+    $("#rech-act").find("> .placeholder").show();
+    $("#rech-act").find("> .hidden").hide();
+    $("#rech-act").find("> .placeholder").show();
+    $("#rech-act").find("> .hidden").hide();
+  })
+
+
+  $(".manual").on("click", function () {
+    $(this).parent().parent().find("> .placeholder").hide();
+    $(this).parent().parent().find("> .hidden").show();
+  })
+
+  $('input:radio[name="exampleRadios"]').change(function() {
+     if (this.checked && this.value == 'ponctual')
+        $('.ponctual').show()
+        else
+                $('.ponctual').hide();
+}); 
+
+</script>
+
+</body>
+</html>
