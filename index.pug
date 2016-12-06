@@ -1,0 +1,95 @@
+//- Vars
+
+- var title = "Web-Toolbox Durable"
+
+//- Mixins (~= functions which returns HTML)
+
+mixin buttonBack()
+  i.fa.fa-arrow-left.buttonBack.clickable(aria-hidden='true', data-direction="-1")
+
+mixin myCheckbox(id, name, value, checked, text)
+  .form-check
+    label.form-check-label
+      input.form-check-input(id=id, type='radio', name=name, value=value, checked=checked)
+      |  #{text}
+
+mixin mySelect(id, ...options)
+  select(id=id)
+    each option in options
+      option= option
+
+mixin myAction(action)
+  .placeholder
+    .card.clickable.launchAction(data-direction="+1")
+      .card-block.text-nowrap.text-uppercase
+        i.fa.fa-search(aria-hidden='true')
+        |  #{action}
+  .menu.hidden
+    +buttonBack
+    button.btn.btn-primary.btn-lg.btn-block(type='button', onclick="alert('Et là : nouvelle page avec les recherches')")
+      i.fa.fa-magic(aria-hidden='true')
+      |  #{action} automatiquement
+    |  
+    button.btn.btn-outline-primary.btn-lg.btn-block.manual.clickable(type='button', data-direction="+1") #{action} manuellement
+  .form.hidden
+    +buttonBack
+    .form-group#divChangeDirection
+      span.batiment BF
+      span.direction →
+      span.batiment PG
+      button.btn.btn-primary.changeDirection ↔
+    .form-group.row
+      .col-xs-6
+        +mySelect("day","Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi")
+      .col-xs-6
+        +mySelect("hour","8h","10h15","12h15","14h15","16h30","18h30")
+    .form-group
+      +myCheckbox("dumb", "recurrence", "none", "checked", "Toutes les semaines")
+      +myCheckbox("dumb", "recurrence", "none", "off", "Semaine A")
+      +myCheckbox("dumb", "recurrence", "none", "off", "Semaine B")
+      +myCheckbox("togglePonctual", "recurrence", "ponctual", "off", "Une seule fois")
+    .form-group.row.hidden.ponctual
+      label.col-xs-4.col-form-label(for='example-datetime-local-input') Seulement le
+      .col-xs-8
+        input#example-datetime-local-input.form-control(type='datetime-local', value='2011-08-19T13:45:00')
+    button.btn.btn-lg.btn-block.btn-primary(type='submit')= action
+
+//- Now the real HTML
+
+doctype html
+html(lang='fr')
+  head
+    meta(charset='utf-8')
+    meta(name='viewport', content='width=device-width, initial-scale=1, shrink-to-fit=no')
+    meta(http-equiv='x-ua-compatible', content='ie=edge')
+    title= title
+    link(rel='stylesheet', href='css/bootstrap.min.css')
+    link(rel='stylesheet', href='css/fullcalendar.min.css')
+    link(rel='stylesheet', href='css/font-awesome.min.css')
+    link(rel='stylesheet', href='css/style.css')
+  body.container-fluid
+    .row
+      nav.navbar.navbar-light.bg-faded
+        ul.nav.navbar-nav
+          li.nav-item.active
+            a.nav-link(href='#')
+              i.fa.fa-th(aria-hidden='true')
+              |  #{title}
+              span.sr-only (current)
+          li.nav-item
+            a.nav-link(href='#')
+              i.fa.fa-car(aria-hidden='true')
+              |  Covoit BF-PG
+      .col-md-12.col-lg-6.agenda.verticalSplit
+        #calendarDiv
+          #calendar
+      .col-md-12.col-lg-6.container-fluid.verticalSplit.verticalSplit2
+        .row.rechercher.action
+          +myAction("Rechercher")
+        .row.proposer.action
+          +myAction("Proposer")
+    script(src='js/jquery-3.1.1.min.js')
+    script(src='js/moment-with-locales.min.js')
+    script(src='js/bootstrap.min.js')
+    script(src='js/fullcalendar.min.js')
+    script(src='js/script.js')

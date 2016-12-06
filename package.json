@@ -1,0 +1,24 @@
+{
+  "name": "webtoolbox",
+  "version": "1.0.0",
+  "description": "Something",
+  "main": "app.js",
+  "scripts": {
+    "build": "node_modules/pug-cli/index.js index.pug",
+    "watch": "node_modules/pug-cli/index.js -w index.pug"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AlexMertz/WebToolbox.git"
+  },
+  "author": "Sylvain DOIGNON & Alexandre MERTZ",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AlexMertz/WebToolbox/issues"
+  },
+  "homepage": "https://github.com/AlexMertz/WebToolbox#readme",
+  "dependencies": {
+    "pug": "^2.0.0-beta6",
+    "pug-cli": "^1.0.0-alpha6"
+  }
+}

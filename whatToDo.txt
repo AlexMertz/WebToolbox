@@ -1,0 +1,15 @@
+Récurrent :
+- Plus à l'heure
+- Prévu
+
+Now :
+- En cas de retard de quelqu'un
+- En cas de changement d'EDT
+
+
+--------------------
+
+
+Il faudrait quelque chose :
+
+
