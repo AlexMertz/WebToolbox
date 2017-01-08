@@ -20,7 +20,7 @@ nav.navbar {
     top: 5px;
     left: 5px;
     cursor: pointer;
-    font-size: 1.5em;
+    font-size: 2em;
     color: #4cb35b;
 }
 .hidden {
@@ -63,16 +63,17 @@ nav.bg-faded {
   font-size: 2em;
   padding: 0 2rem;
 }
-.direction {
+.changeDirection {
   display: inline-block;
-  font-size: 2em;
-  color: black;
+  font-size: 1.3em;
+  color: white;
+  font-weight: bold;
       -webkit-transition: all 0.5s ease-in-out;
     -moz-transition: all 0.5s ease-in-out;
     -o-transition: all 0.5s ease-in-out;
     transition: all 0.5s ease-in-out;
 }
-.direction.rotated {
+.changeDirection.rotated {
   -webkit-transform: rotate(-180deg);     /* Chrome and other webkit browsers */
   -moz-transform: rotate(-180deg);        /* FF */
   -o-transform: rotate(-180deg);          /* Opera */

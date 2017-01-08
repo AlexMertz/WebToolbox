@@ -1,5 +1,10 @@
 $(document).ready(function() {
 
+  // Do not save any inputs, fix FF bug
+  $("input[checked='checked']").each(function() {
+    $(this).prop('checked', true)
+  })
+
   // Calendar
   $('#calendar').fullCalendar({
     hiddenDays: [ 0 ],
@@ -10,11 +15,32 @@ $(document).ready(function() {
   })
 
   // Menu
+  function isDesktop () {
+    return $(window).width() > 1000
+  }
   function moveScreen (actionRoot, direction) {
+    // Make
     var currentShown = actionRoot.find("> div:visible").index()
     var nextToShow = (currentShown  + direction) % 3; 
     actionRoot.find("> div").hide()
     actionRoot.find("> div").eq(nextToShow).show()
+    // Ajust the size on desktop
+    if (isDesktop()) {
+      var otherRoot = $(actionRoot.siblings()[0])
+      if (nextToShow === 0) {
+        // Reset it
+        actionRoot.css("height", "50%")
+        otherRoot.css("height", "50%")
+        
+      } else {
+        // Find the other actionroot and minimize it
+        otherRoot.css("height", "auto")
+        otherRoot.css("height", otherRoot.height() + 20 + "px" )
+        var otherHeight = otherRoot.height()
+        // Expand the current
+        actionRoot.css("height", "calc(100% - " + otherHeight + "px)")
+      }
+    }
   }
   $(".clickable").on("click", function () {
     var myActionRoot = $(this).parentsUntil(".action").parent()
@@ -32,7 +58,7 @@ $(document).ready(function() {
 
   // Launch the arrow animation
   $(".changeDirection").on("click", function () {
-    $(this).parent().find(".direction").toggleClass("rotated")
+    $(this).toggleClass("rotated")
   })
 
   // Hide the other action when beginning one

@@ -1,0 +1,49 @@
+<phpunit
+    bootstrap="tests/bootstrap.php"
+    backupGlobals="false"
+    colors="true"
+    convertErrorsToExceptions="true"
+    convertNoticesToExceptions="true"
+    convertWarningsToExceptions="true"
+    >
+    <testsuites>
+        <testsuite name="render">
+            <file>tests/render.php</file>
+        </testsuite>
+        <testsuite name="compile">
+            <file>tests/compile.php</file>
+        </testsuite>
+        <testsuite name="mainMethods">
+            <file>tests/mainMethods.php</file>
+        </testsuite>
+        <testsuite name="stream">
+            <file>tests/stream.php</file>
+        </testsuite>
+        <testsuite name="options">
+            <file>tests/options.php</file>
+        </testsuite>
+        <testsuite name="helpers">
+            <file>tests/dotHelper.php</file>
+        </testsuite>
+        <testsuite name="badSyntaxes">
+            <file>tests/badSyntaxes.php</file>
+            <file>tests/badSwitchSyntaxes.php</file>
+            <file>tests/badKeywordSyntaxes.php</file>
+            <file>tests/unexpectedTokens.php</file>
+            <file>tests/unexpectedTokensInBrackets.php</file>
+            <file>tests/unexpectedTokensInHooks.php</file>
+            <file>tests/unexpectedTokensInParentheses.php</file>
+            <file>tests/constantRestrictions.php</file>
+        </testsuite>
+    </testsuites>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">src</directory>
+        </whitelist>
+    </filter>
+    <logging>
+        <log type="coverage-clover" target="./coverage/result.xml" />
+        <log type="coverage-html" target="./coverage/result" />
+        <log type="coverage-text" target="./coverage/result.txt" />
+    </logging>
+</phpunit>
