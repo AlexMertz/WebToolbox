@@ -33,16 +33,10 @@ nav.navbar {
   height: 50%;
   overflow-y: auto;
 }
-.rechercher {
-}
-.agenda {
-}
 #calendarDiv {
   padding: 2rem 0;
   height: 100%;
   width: 100%;
-}
-.proposer {
 }
 .fc-toolbar h2 {
   text-transform: capitalize;
@@ -50,14 +44,14 @@ nav.navbar {
 .fc-state-highlight {
   background: #0093164d !important;
 }
-nav.bg-faded {
+nav.navbar {
   background-color: #009316b3;
 }
 .card {
   border: 1px solid rgb(76, 179, 91);
 }
-.navbar-light .navbar-nav .active > .nav-link {
-  color: white;
+.nav-link, .navbar > button {
+  color: black !important;
 }
 .batiment {
   font-size: 2em;

@@ -64,33 +64,36 @@ html(lang='fr')
     link(rel='stylesheet', href='css/fullcalendar.min.css')
     link(rel='stylesheet', href='css/font-awesome.min.css')
     link(rel='stylesheet', href='css/style.css')
-  body.container-fluid
-    .row
-      nav.navbar.navbar-light.bg-faded
-        ul.nav.navbar-nav
-          li.nav-item.active
-            a.nav-link(href='#')
-              i.fa.fa-th(aria-hidden='true')
-              |  #{title}
-              span.sr-only (current)
-          li.nav-item
-            a.nav-link(href='#')
-              i.fa.fa-car(aria-hidden='true')
-              |  Covoit BF-PG
-          li.nav-item
-            a.nav-link(href='#')
+  body
+    nav.navbar.navbar-toggleable-md.navbar-light.bg-faded
+        button.navbar-toggler.navbar-toggler-right(type='button', data-toggle='collapse', data-target='#mynavbar', aria-controls='mynavbar', aria-expanded='false', aria-label='Toggle navigation')
+          span.navbar-toggler-icon
+        a.navbar-brand(href='#')= title
+        #mynavbar.collapse.navbar-collapse
+          ul.navbar-nav.mr-auto
+            li.nav-item.active
+              a.nav-link(href='#')
+                i.fa.fa-user(aria-hidden='true')
+                |  Covoit BF-PG  
+          form.form-inline.my-2.my-lg-0
+            button.btn.btn-outline-secondary.my-2.my-sm-0(type='submit')
               i.fa.fa-user(aria-hidden='true')
-              |  #{user}
-      .col-md-12.col-lg-6.container-fluid.verticalSplit.verticalSplit2
-        .row.rechercher.action
-          +myAction("Rechercher", "fa-search")
-        .row.proposer.action
-          +myAction("Proposer", "fa-calendar-plus-o")
-      .col-md-12.col-lg-6.agenda.verticalSplit
-        #calendarDiv
-          #calendar
-    script(src='js/jquery-3.1.1.min.js')
-    script(src='js/moment-with-locales.min.js')
-    script(src='js/bootstrap.min.js')
-    script(src='js/fullcalendar.min.js')
-    script(src='js/script.js')
+              |  #{user}    
+            a.btn.btn-outline-secondary.my-2.my-sm-0(type='submit', href="logout.php")
+              i.fa.fa-sign-out(aria-hidden='true')
+              |  Logout                
+    .container-fluid
+      .row
+        .col-md-12.col-lg-6.container-fluid.verticalSplit.verticalSplit2
+          .row.rechercher.action
+            +myAction("Rechercher", "fa-search")
+          .row.proposer.action
+            +myAction("Proposer", "fa-calendar-plus-o")
+        .col-md-12.col-lg-6.agenda.verticalSplit
+          #calendarDiv
+            #calendar
+  script(src='js/jquery-3.1.1.min.js')
+  script(src='js/moment-with-locales.min.js')
+  script(src='js/bootstrap.min.js')
+  script(src='js/fullcalendar.min.js')
+  script(src='js/script.js')

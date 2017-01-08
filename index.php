@@ -2,6 +2,8 @@
 
 session_start();
 
+$config = parse_ini_file("config.ini", true);
+
 if (empty($_SESSION["user"])) {
   header("Location: http://assos.utc.fr/onveutdurable/webtoolbox2/login.php");
   exit(0);
@@ -19,6 +21,6 @@ $pug = new Pug(array(
 
 // Compile the Pug template & diplay it !
 echo $pug->render('views/index.pug', array(
-  'title' => 'Web-Toolbox Durable',
+  'title' => $config["this"]["title"],
   "user" => $_SESSION["user"]["login"]
 ));
