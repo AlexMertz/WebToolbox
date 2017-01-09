@@ -59,6 +59,10 @@ $(document).ready(function() {
   // Launch the arrow animation
   $(".changeDirection").on("click", function () {
     $(this).toggleClass("rotated")
+    // Toggle Values
+    var oldValue = $(this).attr("data-value")
+    $(this).attr("data-value", $(this).attr("data-alt-value"))
+    $(this).attr("data-value", oldValue)
   })
 
   // Hide the other action when beginning one
@@ -66,6 +70,12 @@ $(document).ready(function() {
     var myActionRoot = $(this).parentsUntil(".action").parent()
     $(this).parentsUntil(".verticalSplit2").parent()
       .find(".action").not(myActionRoot).find("> div").hide().eq(0).show()
+  })
+
+  $(".submit").on("click", function () {
+    var myForm = $(this).closest(".form")
+    var els = myForm.find("*[data-name]")
+    console.log(els)
   })
 
 })

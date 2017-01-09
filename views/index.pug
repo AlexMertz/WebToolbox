@@ -6,15 +6,17 @@ mixin buttonBack()
 mixin myCheckbox(id, name, value, checked, text)
   .form-check
     label.form-check-label
-      input.form-check-input(id=id, type='radio', name=name, value=value, checked=checked)
+      input.form-check-input(id=id, type='radio', name=name, value=value, checked=checked, data-name=name)
       |  #{text}
 
 mixin mySelect(id, options)
-  select(id=id)
+  select(id=id, data-name=id)
     each option in options
       option= option
 
 mixin myAction(action, icon)
+  - var slangAction = (action === "Rechercher") ? "search" : "propose"
+  - var target = slangAction + ".php"
   .placeholder
     .card.clickable.launchAction(data-direction="+1")
       .card-block.text-nowrap.text-uppercase
@@ -22,34 +24,34 @@ mixin myAction(action, icon)
         |  #{action}
   .menu.hidden
     +buttonBack
-    button.btn.btn-primary.btn-lg.btn-block(type='button', onclick="alert('Et là : nouvelle page avec les recherches')")
+    button.btn.btn-primary.btn-lg.btn-block(type='button', onclick="alert('Et là : nouvelle page avec les recherches')", id="aide-"+action)
       i.fa.fa-magic(aria-hidden='true')
       |  #{action} automatiquement
-    |  
     button.btn.btn-outline-primary.btn-lg.btn-block.manual.clickable(type='button', data-direction="+1") #{action} manuellement
-  .form.hidden
-    +buttonBack
-    .form-group#divChangeDirection
-      span.batiment BF
-      button.btn.btn-primary.changeDirection ➞
-      span.batiment PG
-    .form-group.row
-      .col-xs-6
-        - var o = array( "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi" )
-        +mySelect("day", o)
-      .col-xs-6
-        - var o = array("8h","10h15","12h15","14h15","16h30","18h30")
-        +mySelect("hour", o)
-    .form-group
-      +myCheckbox(null, "recurrence", "all", "checked", "Toutes les semaines")
-      +myCheckbox(null, "recurrence", "a", null, "Semaine A")
-      +myCheckbox(null, "recurrence", "b", null, "Semaine B")
-      +myCheckbox("togglePonctual", "recurrence", "ponctual", null, "Une seule fois")
-    .form-group.row.hidden.ponctual
-      label.col-xs-4.col-form-label(for='example-datetime-local-input') Seulement le
-      .col-xs-8
-        input#example-datetime-local-input.form-control(type='datetime-local', value='2011-08-19')
-    button.btn.btn-lg.btn-block.btn-primary(type='submit')= action
+  .hidden
+    form.form(action=target, method="POST")
+      +buttonBack
+      .form-group#divChangeDirection
+        span.batiment BF
+        button.btn.btn-primary.changeDirection(data-name="direction", data-value="BF->PG", data-alt-value="PG->BF", type='button') ➞
+        span.batiment PG
+      .form-group.row
+        .col-xs-6
+          - var o = array("Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi")
+          +mySelect("dayOfTheWeek", o)
+        .col-xs-6
+          - var o = array("8h","10h15","12h15","14h15","16h30","18h30")
+          +mySelect("time", o)
+      .form-group
+        +myCheckbox(null, "recurrency", "all", "checked", "Toutes les semaines")
+        +myCheckbox(null, "recurrency", "a", null, "Semaine A")
+        +myCheckbox(null, "recurrency", "b", null, "Semaine B")
+        +myCheckbox("togglePonctual", "recurrency", "ponctual", null, "Une seule fois")
+      .form-group.row.hidden.ponctual
+        label.col-xs-4.col-form-label(for='example-datetime-local-input') Seulement le
+        .col-xs-8
+          input#example-datetime-local-input.form-control(type='datetime-local', value='2011-08-19')
+      button.submit.btn.btn-lg.btn-block.btn-primary(type='submit', type='button')= action
 
 //- Now the real HTML
 
@@ -63,6 +65,7 @@ html(lang='fr')
     link(rel='stylesheet', href='css/bootstrap.min.css')
     link(rel='stylesheet', href='css/fullcalendar.min.css')
     link(rel='stylesheet', href='css/font-awesome.min.css')
+    link(rel='stylesheet', href='css/tether.min.css')
     link(rel='stylesheet', href='css/style.css')
   body
     nav.navbar.navbar-toggleable-md.navbar-light.bg-faded
@@ -94,6 +97,7 @@ html(lang='fr')
             #calendar
   script(src='js/jquery-3.1.1.min.js')
   script(src='js/moment-with-locales.min.js')
+  script(src='js/tether.min.js')
   script(src='js/bootstrap.min.js')
   script(src='js/fullcalendar.min.js')
   script(src='js/script.js')
