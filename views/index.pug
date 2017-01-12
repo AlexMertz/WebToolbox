@@ -9,17 +9,21 @@ mixin myCheckbox(id, name, value, checked, text)
       input.form-check-input(id=id, type='radio', name=name, value=value, checked=checked, data-name=name)
       |  #{text}
 
-mixin mySelect(id, options)
-  select(id=id, data-name=id)
+mixin mySelect(clas, options, countOptionsValues)
+  - var counter = 1
+  select(class=clas, name=clas)
     each option in options
-      option= option
+      if countOptionsValues
+        option(value=counter)= option
+        - counter++
+      else
+        option= option
 
 mixin myAction(action, icon)
   - var slangAction = (action === "Rechercher") ? "search" : "propose"
-  - var target = slangAction + ".php"
   .placeholder
     .card.clickable.launchAction(data-direction="+1")
-      .card-block.text-nowrap.text-uppercase
+      .card-block.text-nowrap.text-uppercase.mainActionButton
         i.fa(aria-hidden='true', class=icon)
         |  #{action}
   .menu.hidden
@@ -29,29 +33,30 @@ mixin myAction(action, icon)
       |  #{action} automatiquement
     button.btn.btn-outline-primary.btn-lg.btn-block.manual.clickable(type='button', data-direction="+1") #{action} manuellement
   .hidden
-    form.form(action=target, method="POST")
+    form.form(action="api.php?action=" + slangAction, method="POST")
       +buttonBack
       .form-group#divChangeDirection
         span.batiment BF
-        button.btn.btn-primary.changeDirection(data-name="direction", data-value="BF->PG", data-alt-value="PG->BF", type='button') ➞
+        button.btn.btn-primary.changeDirection(data-name="direction", type='button') ➞
+        input(name="direction", value="BF ➞ PG", data-old-value="PG ➞ BF", type='hidden')
         span.batiment PG
       .form-group.row
         .col-xs-6
           - var o = array("Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi")
-          +mySelect("dayOfTheWeek", o)
+          +mySelect("dayOfTheWeek", o, "countOptionsValues")
         .col-xs-6
-          - var o = array("8h","10h15","12h15","14h15","16h30","18h30")
+          - var o = array("7h45 ➞ 8h","10h00 ➞ 10h15","12h15 ➞ 12h30","14h00 ➞ 14h15","16h15 ➞ 16h30","18h30 ➞ 18h45")
           +mySelect("time", o)
       .form-group
         +myCheckbox(null, "recurrency", "all", "checked", "Toutes les semaines")
-        +myCheckbox(null, "recurrency", "a", null, "Semaine A")
-        +myCheckbox(null, "recurrency", "b", null, "Semaine B")
+        +myCheckbox(null, "recurrency", "week-a", null, "Semaine A")
+        +myCheckbox(null, "recurrency", "week-b", null, "Semaine B")
         +myCheckbox("togglePonctual", "recurrency", "ponctual", null, "Une seule fois")
       .form-group.row.hidden.ponctual
-        label.col-xs-4.col-form-label(for='example-datetime-local-input') Seulement le
+        label.col-xs-4.col-form-label Seulement le
         .col-xs-8
-          input#example-datetime-local-input.form-control(type='datetime-local', value='2011-08-19')
-      button.submit.btn.btn-lg.btn-block.btn-primary(type='submit', type='button')= action
+          input.ponctualInput.form-control(type='datetime-local', value='2017-01-16', pattern="[0-9]{3}-[0-9]{2}-[0-9]{2}", name="ponctual_date")
+      button.submit.btn.btn-lg.btn-block.btn-primary(type='submit', type='button', autocomplete='off')= action
 
 //- Now the real HTML
 

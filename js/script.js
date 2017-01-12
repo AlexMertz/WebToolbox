@@ -49,20 +49,25 @@ $(document).ready(function() {
   })
 
   // Show are hide the "Seulement le"
-  $('input:radio[name="recurrence"]').change(function() {
-    if (this.checked && this.value == 'ponctual')
+  $('input:radio[name="recurrency"]').change(function() {
+      window.a = this
+    if (this.checked && this.value == 'ponctual') {
       $('.ponctual').show()
-    else
+      $(this).parentsUntil("form").parent().find(".dayOfTheWeek").hide()
+    } else {
       $('.ponctual').hide()
+      $(this).parentsUntil("form").parent().find(".dayOfTheWeek").show()
+    }
   }) 
 
   // Launch the arrow animation
   $(".changeDirection").on("click", function () {
     $(this).toggleClass("rotated")
     // Toggle Values
-    var oldValue = $(this).attr("data-value")
-    $(this).attr("data-value", $(this).attr("data-alt-value"))
-    $(this).attr("data-value", oldValue)
+    var input = $(this).siblings("input")
+    var oldValue = input.val()
+    input.val(input.attr("data-old-value"))
+    input.attr("data-old-value", oldValue)
   })
 
   // Hide the other action when beginning one
@@ -73,9 +78,42 @@ $(document).ready(function() {
   })
 
   $(".submit").on("click", function () {
+    var self = $(this)
     var myForm = $(this).closest(".form")
-    var els = myForm.find("*[data-name]")
-    console.log(els)
+    var data = myForm.serialize()
+    var method = myForm.attr("method")
+    var target = myForm.attr("action")
+    $.ajax({
+      url: target,
+      method: method,
+      data: data,
+    }).done(function() {
+      self.addClass("btn-success")
+      self.html('<i class="fa fa-check" aria-hidden="true"></i> Proposé !')
+    }).fail(function(jqXHR, textStatus) {
+      self.addClass("btn-danger")
+      self.html('<i class="fa fa-frown-o" aria-hidden="true"></i> Erreur !')
+      alert( "Erreur : " + jqXHR.responseText );
+    }).always(function(jqXHR, textStatus) {
+      self.removeClass("btn-primary")
+      self.attr("disabled", "disabled")
+    });
   })
+
+  $("form input, form select, .ponctualInput").on("change", function () {
+    var button = $(this).closest("form").find(".submit")
+    button.text("Proposer")
+    button.removeAttr("disabled")
+    button.removeClass("btn-success btn-danger").addClass("btn-primary")
+  })
+
+  $(".action").on("click", function (e) {
+    if (e.target !== this) // Only this el, not children
+      return
+    $(this).find("div.mainActionButton:visible").trigger( "click" )
+  })
+
+
+
 
 })

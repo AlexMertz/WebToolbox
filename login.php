@@ -6,7 +6,7 @@ $config = parse_ini_file("config.ini", true);
 
 $toGet = array(
  "/cas:serviceResponse/cas:authenticationSuccess/cas:user" => "login",
- "/cas:serviceResponse/cas:authenticationSuccess/cas:attributes/cas:mail" => "mail",
+ "/cas:serviceResponse/cas:authenticationSuccess/cas:attributes/cas:mail" => "email",
  "/cas:serviceResponse/cas:authenticationSuccess/cas:attributes/cas:givenName" => "firstName",
  "/cas:serviceResponse/cas:authenticationSuccess/cas:attributes/cas:sn" => "lastName"
 );
@@ -28,6 +28,14 @@ try {
 			throw new Exception('No valid response');
 		$user[$attribute] = $field; 
 	}
+	$bdd = new PDO("mysql:host=" . $config["bdd"]["server"] .";dbname=" . $config["bdd"]["name"] .";charset=utf8", $config["bdd"]["login"], $config["bdd"]["password"]);
+	$req = $bdd->prepare("INSERT INTO Usr (login, firstName, lastName, email) VALUES (:login, :firstName, :lastName, :email) ON DUPLICATE KEY UPDATE login=:login") or die("Erreur lors de la requette à la BDD : " . print_r($bdd->errorInfo()));
+	$req->execute(array(
+		"login" => $user["login"],
+		"firstName" => $user["firstName"],
+		"lastName" => $user["lastName"],
+		"email" => $user["email"]
+	));
 	$_SESSION["user"] = $user;
 	header("Location: " . $config["this"]["main_url"]); 
 
