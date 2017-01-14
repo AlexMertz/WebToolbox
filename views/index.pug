@@ -38,7 +38,7 @@ mixin myAction(action, icon)
       .form-group#divChangeDirection
         span.batiment BF
         button.btn.btn-primary.changeDirection(data-name="direction", type='button') ➞
-        input(name="direction", value="BF ➞ PG", data-old-value="PG ➞ BF", type='hidden')
+        input(name="direction", value="BF ➞ PG", data-old-value="PG ➞ BF", type='hidden', autocomplete="off")
         span.batiment PG
       .form-group.row
         .col-xs-6
@@ -56,7 +56,43 @@ mixin myAction(action, icon)
         label.col-xs-4.col-form-label Seulement le
         .col-xs-8
           input.ponctualInput.form-control(type='datetime-local', value='2017-01-16', pattern="[0-9]{3}-[0-9]{2}-[0-9]{2}", name="ponctual_date")
-      button.submit.btn.btn-lg.btn-block.btn-primary(type='submit', type='button', autocomplete='off')= action
+      button.submit.btn.btn-lg.btn-block.btn-primary(type='submit', type='button', autocomplete='off', id="submit-" + slangAction)= action
+  if action === "Rechercher"
+    .hidden.results
+      h2 Voici les résultats :
+      .listResults
+      .template.hidden
+        .card.cardResult
+          img.card-img-top(alt='Card image cap')
+          .card-block
+            h4.card-title
+              i.fa.fa-user(aria-hidden='true', class=icon)
+              span.driver
+            p.card-text 
+              i.fa.fa-info-circle(aria-hidden='true', class=icon)
+              span I'm cool, and you ?
+          ul.list-group.list-group-flush
+            li.list-group-item 
+              i.fa.fa-compass(aria-hidden='true', class=icon)
+              span.direction
+            li.list-group-item 
+              i.fa.fa-calendar-o(aria-hidden='true', class=icon)
+              span.date
+            li.list-group-item 
+              i.fa.fa-clock-o(aria-hidden='true', class=icon)
+              span.time
+            li.list-group-item 
+              i.fa.fa-user-circle-o(aria-hidden='true', class=icon)
+              span.nbPassengers
+              | /
+              span.nbSeats
+              | &#160;places réservées (
+              span.passengers
+              | )
+          .card-block
+            a.btn.btn-primary(href='#') Réserver
+
+
 
 //- Now the real HTML
 

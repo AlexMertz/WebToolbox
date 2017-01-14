@@ -47,7 +47,7 @@ nav.navbar {
 nav.navbar {
   background-color: #009316b3;
 }
-.card {
+.placeholder > .card {
   border: 1px solid rgb(76, 179, 91);
 }
 .nav-link, .navbar > button {
@@ -79,6 +79,19 @@ nav.navbar {
 }
 #divChangeDirection > * {
   vertical-align: middle;
+}
+
+.cardResult {
+  width: 20rem;
+}
+
+.cardResult i {
+  padding-right: 0.5em;
+}
+
+.cardResult img {
+  width: 100px;
+  margin: 0 auto;
 }
 
 @media screen and (max-width: 990px) {

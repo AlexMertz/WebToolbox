@@ -20,8 +20,10 @@ $(document).ready(function() {
   }
   function moveScreen (actionRoot, direction) {
     // Make
+    window.a = actionRoot
     var currentShown = actionRoot.find("> div:visible").index()
-    var nextToShow = (currentShown  + direction) % 3; 
+    var total = actionRoot.find("> div").length;
+    var nextToShow = (currentShown  + direction) % total; 
     actionRoot.find("> div").hide()
     actionRoot.find("> div").eq(nextToShow).show()
     // Ajust the size on desktop
@@ -50,7 +52,6 @@ $(document).ready(function() {
 
   // Show are hide the "Seulement le"
   $('input:radio[name="recurrency"]').change(function() {
-      window.a = this
     if (this.checked && this.value == 'ponctual') {
       $('.ponctual').show()
       $(this).parentsUntil("form").parent().find(".dayOfTheWeek").hide()
@@ -77,7 +78,7 @@ $(document).ready(function() {
       .find(".action").not(myActionRoot).find("> div").hide().eq(0).show()
   })
 
-  $(".submit").on("click", function () {
+  $("#submit-propose").on("click", function () {
     var self = $(this)
     var myForm = $(this).closest(".form")
     var data = myForm.serialize()
@@ -97,6 +98,53 @@ $(document).ready(function() {
     }).always(function(jqXHR, textStatus) {
       self.removeClass("btn-primary")
       self.attr("disabled", "disabled")
+    });
+  })
+
+  $("#submit-search").on("click", function () {
+    var self = $(this)
+    var myForm = $(this).closest(".form")
+    var data = myForm.serialize()
+    var method = myForm.attr("method")
+    var target = myForm.attr("action")
+    $.ajax({
+      url: target,
+      method: method,
+      data: data,
+    }).done(function(jqXHR, textStatus) {
+      try {
+        var response = JSON.parse(jqXHR)
+        if (response.match === "0%")
+          alert("Aucun covoiturage disponible à cette heure: (")
+        else {
+          var myActionRoot = self.parentsUntil(".action").parent()
+          moveScreen(myActionRoot, 1)
+          var divResults = myActionRoot.find(".results")
+          var template = divResults.find(".template")
+          var listResults = divResults.find(".listResults")
+          listResults.html("")
+          response.proposals.forEach(function (p) {
+            var t = $(template.html())
+            t.find("img").attr("src", "https://demeter.utc.fr/portal/pls/portal30/portal30.get_photo_utilisateur?username=" + p.driver)
+            t.find(".driver").text(p.firstName + " " + p.lastName)
+            t.find(".direction").text(p.direction)
+            var d = [ "Dimanche", "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Dimanche"]
+            t.find(".date").text(d[p.dayOfTheWeek])
+            t.find(".time").text(p.time)
+            t.find(".nbPassengers").text(p.nbPassengers)
+            t.find(".nbSeats").text(p.nbSeats)
+            t.find(".passengers").text(p.passengers)
+            //t.find(".time").text(p.time)
+            listResults.append(t)
+          })
+        }
+      } catch (e) {
+        alert(jqXHR)
+      }
+      console.log(response)
+    }).fail(function(jqXHR, textStatus) {
+      alert( "Erreur : " + jqXHR.responseText );
+    }).always(function(jqXHR, textStatus) {
     });
   })
 

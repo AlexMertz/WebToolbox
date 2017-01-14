@@ -40,19 +40,20 @@ function getDateEndCurrentSemester () {
     }
 }
 
-function insertProposal ($bdd, $direction, $time, $usrLogin) {
-    $req = $bdd->prepare("INSERT INTO Proposal (direction, `time`, usrLogin) VALUES (:direction, :time, :usrLogin)") or die("Erreur lors de la requette à la BDD : " . print_r($bdd->errorInfo()));
+function insertProposal ($bdd, $direction, $time, $dayOfTheWeek, $usrLogin) {
+    $req = $bdd->prepare("INSERT INTO Proposal (direction, `time`, dayOfTheWeek, usrLogin) VALUES (:direction, :time, :dayOfTheWeek, :usrLogin)") or die("Erreur lors de la requette à la BDD : " . print_r($bdd->errorInfo()));
     $req->execute(array(
         "direction" => $direction,
         "time" => $time,
+        "dayOfTheWeek" => $dayOfTheWeek,
         "usrLogin" => $usrLogin
     ));
 }
 
-function insertRide($bdd, $tripId, $date) {
-    $req2 = $bdd->prepare("INSERT INTO Ride (tripId, `date`) VALUES (:tripId, :date)") or die("Erreur lors de la requette à la BDD : " . print_r($bdd->errorInfo()));
+function insertRide($bdd, $ProposalId, $date) {
+    $req2 = $bdd->prepare("INSERT INTO Ride (ProposalId, `date`) VALUES (:ProposalId, :date)") or die("Erreur lors de la requette à la BDD : " . print_r($bdd->errorInfo()));
     $req2->execute(array(
-        "tripId" => $tripId,
+        "ProposalId" => $ProposalId,
         "date" => $date
     ));
 }
@@ -85,3 +86,42 @@ function duplicateDetected ($bdd, $login, $time, $direction, $date) {
     ));
     return $req->rowCount() != 0;
 }
+
+function extractPostParameters ($toGet)  {
+    $values = array();
+    foreach ($toGet as $key) {
+        $values[$key] = $_POST[$key];
+    }
+    return $values;
+}
+
+function getDaysForReccurency ($recurrency, $dayOfTheWeek, $ponctual_date) {
+    $days = array();
+    if ($recurrency == "all")
+        $days = getDateForSpecificDayBetweenDates(time(), getDateEndCurrentSemester(), $dayOfTheWeek);
+    else if ($recurrency == "ponctual") {
+        $days[0] = strtotime($ponctual_date);
+    }
+    else
+        myDie("No valid recurrency");
+    return $days;
+}
+
+function getRide($bdd, $direction, $time, $day) {
+    $req = $bdd->prepare("SELECT * FROM V_Trips WHERE direction=:direction AND time=:time AND date=:date AND isFull=0");
+    $req->execute(array(
+        "direction" => $direction,
+        "time" => $time,
+        "date" => $day
+    ));
+    return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getProposal($bdd, $id) {
+    $req = $bdd->prepare("SELECT v.id, v.driver, v.direction, v.time, v.dayOfTheWeek, v.passengers, v.nbPassengers, v.nbSeats, u.firstName, u.lastName, u.email FROM V_Trips v INNER JOIN Usr u On v.driver = u.login WHERE id=:id");
+    $req->execute(array(
+        "id" => $id
+    ));
+    return $req->fetch(PDO::FETCH_ASSOC);
+}
+
