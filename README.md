@@ -27,4 +27,12 @@ Webtoolbox
   rechercher = icone de cal+
   fix ff default select
   schema BDD
+  nb de places dans proposer
+  afficher dans le cal ses covoits
 
+Priorités :
+  Reserver reserve et envoie un mail aux deux
+  Version mobile corrigée
+  Cliquer voir : pour annuler un voyage, tout, annuler une personne
+  app webview
+  Rechercher comment récupérer EDT

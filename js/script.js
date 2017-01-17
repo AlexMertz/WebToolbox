@@ -9,9 +9,76 @@ $(document).ready(function() {
   $('#calendar').fullCalendar({
     hiddenDays: [ 0 ],
     locale: "fr",
+    allDaySlot: false,
+    slotLabelFormat: "HH:mm",
     buttonText: { today: "Aujourd'hui" },
     defaultView: "agendaWeek",
-    height: "parent"
+    height: "parent",
+    slotDuration : '00:15:00',
+    displayEventTime: false,
+    viewRender: function( view, element ) {
+      var date = view.start.format('YYYY-w')
+      $.ajax({
+        method: "POST",
+        url: "api?action=getSchedule",
+        dataType: "json",
+        data : {
+          "login" : window.user,
+        }
+      }).done(function(data) {
+          renderEvents("Conducteur", data.asDriver, "#448ccb")
+          renderEvents("Passager", data.asPassenger, "#77bdf8")
+      })
+    },
+    eventClick: function(calEvent, jsEvent, view) {
+      /*
+      alert('Event: ' + calEvent.title);
+      alert('Coordinates: ' + jsEvent.pageX + ',' + jsEvent.pageY);
+      alert('View: ' + view.name);
+      // change the border color just for fun
+      $(this).css('border-color', 'red');
+      */
+      // Fill the modal
+      var m = $('#myModal')
+      m.find('.modal-title').text()
+      m.modal("show")
+    }
+  })
+
+  function renderEvents (name, data, color) {
+    for (trip of data) {
+      for (date of trip.dates.split(",")) {
+        var time = trip.time.split(" ➞ ")
+        for (var index = 0; index < time.length; index++) {
+          if (time[index].length === 5)
+            time[index] = moment(date + time[index], "YYYY-MM-DDHH[h]mm")
+          else if (time[index].length === 4)
+            time[index] = moment(date + time[index], "YYYY-MM-DDH[h]mm")
+          else if (time[index].length === 2)
+            time[index] = moment(date + time[index], "YYYY-MM-DDH[h]")
+          else
+            alert("Date parse error")
+        }
+        var start = time[0]
+        var end = time[1]
+        $("#calendar").fullCalendar( 'renderEvent', { 
+          "title": name, 
+          "start" : start,
+          "end" : end,
+          "color" : color,
+          "link": null
+        })
+      }
+    }
+  }
+
+  $('#myModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget) // Button that triggered the modal
+    console.log(event)
+    var hello = button.data('hello') // Extract info from data-* attributes
+    var modal = $(this)
+    modal.find('.modal-title').text(hello)
+    //modal.find('.modal-body input').val(recipient)
   })
 
   // Menu
@@ -105,6 +172,8 @@ $(document).ready(function() {
     var self = $(this)
     var myForm = $(this).closest(".form")
     var data = myForm.serialize()
+    var recurrency = myForm.find("input[name='recurrency']").val()
+    var ponctual = myForm.find("input[name='ponctual']").val()
     var method = myForm.attr("method")
     var target = myForm.attr("action")
     $.ajax({
@@ -134,18 +203,36 @@ $(document).ready(function() {
             t.find(".nbPassengers").text(p.nbPassengers)
             t.find(".nbSeats").text(p.nbSeats)
             t.find(".passengers").text(p.passengers)
-            //t.find(".time").text(p.time)
+            t.find(".book").attr("data-recurrency", recurrency)
+            t.find(".book").attr("data-ponctual", ponctual)
             listResults.append(t)
           })
         }
       } catch (e) {
         alert(jqXHR)
       }
-      console.log(response)
     }).fail(function(jqXHR, textStatus) {
       alert( "Erreur : " + jqXHR.responseText );
-    }).always(function(jqXHR, textStatus) {
-    });
+    })
+  })
+
+  $(".results").on("click", ".book", function () {
+      var recurrency = $(this).attr("data-recurrency")
+      var id = $(this).attr("data-id")
+      var ponctual = $(this).attr("data-ponctual")
+      $.ajax({
+        url: "api.php?action=book",
+        method: "POST",
+        data: { 
+          recurrency: recurrency,
+          ponctual: ponctual,
+          id: id
+      },
+      }).done(function(jqXHR, textStatus) {
+          alert("ok")
+      }).fail(function(jqXHR, textStatus) {
+        alert( "Erreur : " + jqXHR.responseText );
+      })
   })
 
   $("form input, form select, .ponctualInput").on("change", function () {

@@ -24,13 +24,15 @@ try {
   myDie("Erreur lors de la connection à la BDD : " . $e->getMessage());
 }
 if ($_GET["action"] == "propose") {
-	$values = extractPostParameters(array("direction", "dayOfTheWeek", "time", "recurrency", "ponctual_date"));
+	$values = extractPostParameters(array("direction", "dayOfTheWeek", "time", "recurrency", "ponctual_date", "nbSeats"));
 	if (!in_array($values["direction"], getDirections($bdd)))
 		myDie("Invalid direction");
 	if (!in_array($values["time"], getTimes($bdd)))
 		myDie("Invalid time");
 	if (!is_numeric($values["dayOfTheWeek"]) || $values["dayOfTheWeek"] < 0 || $values["dayOfTheWeek"] > 7)
 		myDie("Invalid day of the week");
+	if (!is_numeric($values["nbSeats"]) || $values["nbSeats"] < 0 || $values["nbSeats"] > 7)
+		myDie("Invalid number of seats");
 	$days = getDaysForReccurency($values["recurrency"], $values["dayOfTheWeek"], $values["ponctual_date"]);
 	foreach ($days as $day)
 		if (duplicateDetected($bdd, $_SESSION["user"]["login"], $values["time"], $values["direction"], $day))
@@ -38,7 +40,7 @@ if ($_GET["action"] == "propose") {
 	$bdd->beginTransaction();
 	// Insert the Proposal
 	try  {
-		insertProposal($bdd, $values["direction"], $values["time"], $values["dayOfTheWeek"], $_SESSION["user"]["login"]);
+		insertProposal($bdd, $values["direction"], $values["time"], $values["nbSeats"], $values["dayOfTheWeek"], $_SESSION["user"]["login"]);
 		$lastId = $bdd->lastInsertId();
 		// And the rides
 		foreach ($days as $day)
@@ -78,7 +80,16 @@ if ($_GET["action"] == "propose") {
 			array_push($proposals, getProposal($bdd, $id));
 		echo json_encode(array("match" => "100%", "proposals" => $proposals));
 	}
-
-
-
+} else if ($_GET["action"] == "getSchedule") {
+	$values = extractPostParameters(array("login"));
+	$asDriver = getTripsAsDriver($bdd, $values["login"]);
+	$asPassenger = getTripsAsPassenger($bdd, $values["login"]);
+	echo json_encode(array("asDriver" => $asDriver, "asPassenger" => $asPassenger));
+} else if ($_GET["action"] == "book") {
+	$values = extractPostParameters(array("id", "recurrency"));
+	$proposal = getProposal($bdd, $id);
+	$days = getDaysForReccurency($values["recurrency"], $proposal["dayOfTheWeek"], $values["ponctual_date"]);
+	foreach ($days as $day) {
+		book($bdd, $id, $day, $_SESSION["user"]["login"]);
+	}
 }

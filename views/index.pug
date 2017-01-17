@@ -19,6 +19,38 @@ mixin mySelect(clas, options, countOptionsValues)
       else
         option= option
 
+mixin myCard (buttons)
+  .card.cardResult
+    img.card-img-top(alt='Card image cap')
+    .card-block
+      h4.card-title
+        i.fa.fa-user(aria-hidden='true', class=icon)
+        span.driver
+      p.card-text 
+        i.fa.fa-info-circle(aria-hidden='true', class=icon)
+        span I'm cool, and you ?
+    ul.list-group.list-group-flush
+      li.list-group-item 
+        i.fa.fa-compass(aria-hidden='true', class=icon)
+        span.direction
+      li.list-group-item 
+        i.fa.fa-calendar-o(aria-hidden='true', class=icon)
+        span.date
+      li.list-group-item 
+        i.fa.fa-clock-o(aria-hidden='true', class=icon)
+        span.time
+      li.list-group-item 
+        i.fa.fa-user-circle-o(aria-hidden='true', class=icon)
+        span.nbPassengers
+        | /
+        span.nbSeats
+        | &#160;places réservées (
+        span.passengers
+        | )
+    .card-block
+      each button in buttons
+        a.btn.btn-primary.btn-block(class=button.class)= button.title
+
 mixin myAction(action, icon)
   - var slangAction = (action === "Rechercher") ? "search" : "propose"
   .placeholder
@@ -47,6 +79,11 @@ mixin myAction(action, icon)
         .col-xs-6
           - var o = array("7h45 ➞ 8h","10h00 ➞ 10h15","12h15 ➞ 12h30","14h00 ➞ 14h15","16h15 ➞ 16h30","18h30 ➞ 18h45")
           +mySelect("time", o)
+      if slangAction === "propose"
+        .form-group.row
+          .col-xs-12
+            - var o = array("1 place", "2 places", "3 places", "4 places", "5 places", "6 places")
+            +mySelect("nbSeats", o, "countOptionsValues")
       .form-group
         +myCheckbox(null, "recurrency", "all", "checked", "Toutes les semaines")
         +myCheckbox(null, "recurrency", "week-a", null, "Semaine A")
@@ -59,40 +96,12 @@ mixin myAction(action, icon)
       button.submit.btn.btn-lg.btn-block.btn-primary(type='submit', type='button', autocomplete='off', id="submit-" + slangAction)= action
   if action === "Rechercher"
     .hidden.results
+      +buttonBack
       h2 Voici les résultats :
       .listResults
       .template.hidden
-        .card.cardResult
-          img.card-img-top(alt='Card image cap')
-          .card-block
-            h4.card-title
-              i.fa.fa-user(aria-hidden='true', class=icon)
-              span.driver
-            p.card-text 
-              i.fa.fa-info-circle(aria-hidden='true', class=icon)
-              span I'm cool, and you ?
-          ul.list-group.list-group-flush
-            li.list-group-item 
-              i.fa.fa-compass(aria-hidden='true', class=icon)
-              span.direction
-            li.list-group-item 
-              i.fa.fa-calendar-o(aria-hidden='true', class=icon)
-              span.date
-            li.list-group-item 
-              i.fa.fa-clock-o(aria-hidden='true', class=icon)
-              span.time
-            li.list-group-item 
-              i.fa.fa-user-circle-o(aria-hidden='true', class=icon)
-              span.nbPassengers
-              | /
-              span.nbSeats
-              | &#160;places réservées (
-              span.passengers
-              | )
-          .card-block
-            a.btn.btn-primary(href='#') Réserver
-
-
+        - var buttons = array( {title: "Réserver", classe: "book"} )
+        +myCard(buttons)
 
 //- Now the real HTML
 
@@ -136,9 +145,18 @@ html(lang='fr')
         .col-md-12.col-lg-6.agenda.verticalSplit
           #calendarDiv
             #calendar
+    #myModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalLabel', aria-hidden='true')
+      .modal-dialog(role='document')
+        .modal-content
+          .modal-body
+            - var buttons = array( { title: "Annuler la série", class: "cancelSeries" }, { title: "Annuler ce covoit", class: "cancel" }, { title: "Annuler la série", class: "cancelSeries" } )
+            +myCard(buttons)
+
   script(src='js/jquery-3.1.1.min.js')
   script(src='js/moment-with-locales.min.js')
   script(src='js/tether.min.js')
   script(src='js/bootstrap.min.js')
   script(src='js/fullcalendar.min.js')
   script(src='js/script.js')
+  script.
+    window.user = "#{user}";

@@ -45,7 +45,7 @@ nav.navbar {
   background: #0093164d !important;
 }
 nav.navbar {
-  background-color: #009316b3;
+  background-color: #199e2c;
 }
 .placeholder > .card {
   border: 1px solid rgb(76, 179, 91);
@@ -81,7 +81,7 @@ nav.navbar {
   vertical-align: middle;
 }
 
-.cardResult {
+.template > .cardResult {
   width: 20rem;
 }
 
@@ -92,6 +92,11 @@ nav.navbar {
 .cardResult img {
   width: 100px;
   margin: 0 auto;
+}
+
+.fc-content {
+  text-align: center;
+  line-height: 22px;
 }
 
 @media screen and (max-width: 990px) {

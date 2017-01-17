@@ -40,12 +40,13 @@ function getDateEndCurrentSemester () {
     }
 }
 
-function insertProposal ($bdd, $direction, $time, $dayOfTheWeek, $usrLogin) {
-    $req = $bdd->prepare("INSERT INTO Proposal (direction, `time`, dayOfTheWeek, usrLogin) VALUES (:direction, :time, :dayOfTheWeek, :usrLogin)") or die("Erreur lors de la requette à la BDD : " . print_r($bdd->errorInfo()));
+function insertProposal ($bdd, $direction, $time, $nbSeats, $dayOfTheWeek, $usrLogin) {
+    $req = $bdd->prepare("INSERT INTO Proposal (direction, `time`, dayOfTheWeek, usrLogin, nbSeats) VALUES (:direction, :time, :dayOfTheWeek, :usrLogin, :nbSeats)") or die("Erreur lors de la requette à la BDD : " . print_r($bdd->errorInfo()));
     $req->execute(array(
         "direction" => $direction,
         "time" => $time,
         "dayOfTheWeek" => $dayOfTheWeek,
+        "nbSeats" => $nbSeats,
         "usrLogin" => $usrLogin
     ));
 }
@@ -125,3 +126,28 @@ function getProposal($bdd, $id) {
     return $req->fetch(PDO::FETCH_ASSOC);
 }
 
+function getTripsAsDriver($bdd, $login) {
+    $req = $bdd->prepare("SELECT v.id, v.driver, v.direction, v.time, passengers,  group_concat(DISTINCT r.date separator ',') AS `dates` FROM `V_Trips` v INNER JOIN Ride r ON v.id=r.proposalId WHERE v.driver=:login GROUP BY v.id");
+    $req->execute(array(
+        "login" => $login
+    ));
+    return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function getTripsAsPassenger($bdd, $login) {
+    $login = "%" . $login . "%";
+    $req = $bdd->prepare("SELECT v.id, v.driver, v.direction, v.time, passengers,  group_concat(DISTINCT r.date separator ',') AS `dates` FROM `V_Trips` v INNER JOIN Ride r ON v.id=r.proposalId WHERE v.passengers LIKE :login GROUP BY v.id");
+    $req->execute(array(
+        "login" => $login
+    ));
+    return $req->fetchAll(PDO::FETCH_ASSOC);
+}
+
+function book ($bdd, $id, $date, $login) {
+    $req = $bdd->prepare('INSERT INTO Reservation (usrLogin, rideId) SELECT id, ":usrLogin" FROM Rides WHERE id=:id AND date=date');
+    $req->execute(array(
+        "id" => $id,
+        "date" => $date,
+        "usrLogin" => $login
+    ));
+}
