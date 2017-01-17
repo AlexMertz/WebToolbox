@@ -1,6 +1,13 @@
 nav.navbar {
   height: 50px;
 }
+
+.navbar-light a.navbar-brand {
+  color: white;
+}
+.navbar-toggler-icon {
+  height: 1em;
+}
 .action {
   display: flex;
   justify-content: center;
@@ -46,6 +53,10 @@ nav.navbar {
 }
 nav.navbar {
   background-color: #199e2c;
+}
+#mynavbar {
+  z-index: 1;
+  padding-left: 1em;
 }
 .placeholder > .card {
   border: 1px solid rgb(76, 179, 91);
@@ -110,5 +121,9 @@ nav.navbar {
   }
   .verticalSplit2 {
     height: auto;
+  }
+  #mynavbar {
+  box-shadow: 0px 0px 10px 1px #656565;
+  background: white;
   }
 }

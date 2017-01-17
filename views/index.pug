@@ -100,8 +100,9 @@ mixin myAction(action, icon)
       h2 Voici les résultats :
       .listResults
       .template.hidden
-        - var buttons = array( {title: "Réserver", classe: "book"} )
-        +myCard(buttons)
+        //
+          - var buttons = array( {title: "Réserver", classe: "book"} )
+          +myCard(buttons)
 
 //- Now the real HTML
 
@@ -129,10 +130,10 @@ html(lang='fr')
                 i.fa.fa-user(aria-hidden='true')
                 |  Covoit BF-PG  
           form.form-inline.my-2.my-lg-0
-            button.btn.btn-outline-secondary.my-2.my-sm-0(type='submit')
+            button.btn.btn-secondary.my-2.my-sm-0(type='submit')
               i.fa.fa-user(aria-hidden='true')
               |  #{user}    
-            a.btn.btn-outline-secondary.my-2.my-sm-0(type='submit', href="logout.php")
+            a.btn.btn-secondary.my-2.my-sm-0(type='submit', href="logout.php")
               i.fa.fa-sign-out(aria-hidden='true')
               |  Logout                
     .container-fluid
@@ -149,8 +150,9 @@ html(lang='fr')
       .modal-dialog(role='document')
         .modal-content
           .modal-body
-            - var buttons = array( { title: "Annuler la série", class: "cancelSeries" }, { title: "Annuler ce covoit", class: "cancel" }, { title: "Annuler la série", class: "cancelSeries" } )
-            +myCard(buttons)
+            //
+              - var buttons = array( { title: "Annuler la série", class: "cancelSeries" }, { title: "Annuler ce covoit", class: "cancel" }, { title: "Annuler la série", class: "cancelSeries" } )
+              +myCard(buttons)
 
   script(src='js/jquery-3.1.1.min.js')
   script(src='js/moment-with-locales.min.js')

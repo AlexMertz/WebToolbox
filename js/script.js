@@ -20,7 +20,7 @@ $(document).ready(function() {
       var date = view.start.format('YYYY-w')
       $.ajax({
         method: "POST",
-        url: "api?action=getSchedule",
+        url: "api.php?action=getSchedule",
         dataType: "json",
         data : {
           "login" : window.user,

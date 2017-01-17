@@ -5,7 +5,7 @@ session_start();
 $config = parse_ini_file("config.ini", true);
 
 if (empty($_SESSION["user"])) {
-  header("Location: http://assos.utc.fr/onveutdurable/webtoolbox2/login.php");
+  header($config["this"]["login_url"]);
   exit(0);
 }
 
@@ -16,7 +16,7 @@ http://assos.utc.fr/onveutdurable/webtoolbox2/login.php
 
 // Start Pug
 $pug = new Pug(array(
-  'cache' => '/sites/onveutdurable/webtoolbox2/cache'
+  'cache' => $config["this"]["cache_folder"]
 ));
 
 // Compile the Pug template & diplay it !
